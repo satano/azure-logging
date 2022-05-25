@@ -8,7 +8,8 @@
       "launchUrl": "worker",
       "applicationUrl": "https://localhost:7136;http://localhost:5136",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=c452bcd6-cc11-4ca9-b5cc-e7efcbf42d60;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/"
       }
     }
   }
