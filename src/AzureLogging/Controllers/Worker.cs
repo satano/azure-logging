@@ -19,26 +19,26 @@ namespace AzureLogging.Controllers
         [HttpGet("{name}")]
         public async Task<string> Do(string name)
         {
-            _logger.LogInformation($"Started work on task {name}.");
+            _logger.LogInformation("Started work on task {TaskName}.", name);
 
             Stopwatch sw = Stopwatch.StartNew();
 
             int workAmount = _random.Next(3000);
             if (workAmount > 2000)
             {
-                _logger.LogError($"Work on task {name} is too expensive: {workAmount} ms");
+                _logger.LogError("Work on task {TaskName} is too expensive: {WorkAmount} ms.", name, workAmount);
                 throw new BadHttpRequestException($"Work on task {name} is too expensive: {workAmount} ms");
             }
 
-            _logger.LogDebug($"Working on task {name}, job 1.");
+            _logger.LogDebug("Working on task {TaskName}, job 1.", name);
             await Task.Delay(workAmount / 2);
 
-            _logger.LogDebug($"Working on task {name}, job 2.");
+            _logger.LogDebug("Working on task {TaskName}, job 2.", name);
             await Task.Delay(workAmount / 2);
 
             sw.Stop();
 
-            _logger.LogInformation($"Finished work on task {name} in {sw.ElapsedMilliseconds} ms.");
+            _logger.LogInformation("Finished work on task {TaskName} in {WorkDuration} ms.", name, sw.ElapsedMilliseconds);
 
             return $"Worked on task {name} for {sw.ElapsedMilliseconds} ms.";
         }
