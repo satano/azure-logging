@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Metrics;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace AzureLogging.Controllers
@@ -10,11 +12,15 @@ namespace AzureLogging.Controllers
         private static readonly Random _random = new();
 
         private readonly ILogger _logger;
+        private readonly TelemetryClient _telemetry;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, TelemetryClient telemetry)
         {
             _logger = logger;
+            _telemetry = telemetry;
         }
+
+        private static readonly MetricIdentifier _workDuration = new("Kros", "WorkDuration");
 
         [HttpGet("{name}")]
         public async Task<string> Do(string name)
@@ -39,6 +45,7 @@ namespace AzureLogging.Controllers
             sw.Stop();
 
             _logger.LogInformation("Finished work on task {TaskName} in {WorkDuration} ms.", name, sw.ElapsedMilliseconds);
+            _telemetry.GetMetric(_workDuration).TrackValue(sw.ElapsedMilliseconds);
 
             return $"Worked on task {name} for {sw.ElapsedMilliseconds} ms.";
         }
