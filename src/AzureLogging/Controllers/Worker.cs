@@ -1,4 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Metrics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -32,8 +32,16 @@ namespace AzureLogging.Controllers
             int workAmount = _random.Next(3000);
             if (workAmount > 2000)
             {
-                _logger.LogError("Work on task {TaskName} is too expensive: {WorkAmount} ms.", name, workAmount);
-                throw new BadHttpRequestException($"Work on task {name} is too expensive: {workAmount} ms");
+                //_logger.LogError("Work on task {TaskName} is too expensive: {WorkAmount} ms.", name, workAmount);
+                try
+                {
+                    throw new BadHttpRequestException($"Work on task {name} is too expensive: {workAmount} ms");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Work on task {TaskName} is too expensive: {WorkAmount} ms.", name, workAmount);
+                    throw;
+                }
             }
 
             _logger.LogDebug("Working on task {TaskName}, job 1.", name);
